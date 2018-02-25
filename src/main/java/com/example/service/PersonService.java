@@ -1,5 +1,9 @@
 package com.example.service;
 
+import java.util.List;
+
+import org.springframework.data.history.Revisions;
+
 import com.example.model.Person;
 
 /**
@@ -34,6 +38,18 @@ public interface PersonService {
 	 */
 	void deletePerson(Long code);
 
+	/**
+	 * @param person
+	 * @return
+	 */
 	Person udpatePerson(Person person);
+
+	/**
+	 * find the revisions changes from:
+	 * 
+	 * @param code identifier {@link Person}
+	 * @return all {@link Revisions}
+	 */
+	List<Person> findAllRevision(Long code);
 
 }

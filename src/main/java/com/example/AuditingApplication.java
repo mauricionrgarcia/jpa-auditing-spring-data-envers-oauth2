@@ -12,6 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @sinse 21/02/2018 23:13:24
  */
 @SpringBootApplication
+// neet if envers jpa
+// @EnableJpaRepositories(repositoryFactoryBeanClass =
+// EnversRevisionRepositoryFactoryBean.class)
 public class AuditingApplication {
 
 	public static void main(String[] args) {
