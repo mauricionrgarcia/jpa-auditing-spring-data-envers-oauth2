@@ -5,6 +5,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import com.example.model.User;
+
 /**
  * 
  * AuditorAware<br>
@@ -33,8 +35,7 @@ public class SpringSecurityAuditorAware implements AuditorAware<Long> {
 	@Override
 	public Long getCurrentAuditor() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		auth.getPrincipal();
-		return 1L;
+		return ((User) auth.getPrincipal()).getCode();
 	}
 
 }

@@ -1,6 +1,6 @@
 spring:
   jpa:
-    hibernate.ddl-auto: update
+    hibernate.ddl-auto: none
     database: MYSQL
     show-sql: true
     hibernate: 

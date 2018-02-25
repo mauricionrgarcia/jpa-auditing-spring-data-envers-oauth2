@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 
 import com.example.model.User;
-import com.example.security.dto.SystemUserDTO;
 
 /**
  * Decorator to extract Authentication from map information decoded from an
@@ -21,15 +20,15 @@ public class UserAuthenticationConverterDecorator extends DefaultUserAuthenticat
 	/**
 	 * key add in {@link CustomTokenEnhacer}
 	 */
-	private static final String KEY_ID_USER = "Id";
+	private static final String KEY_ID_USER = "id";
 
 	@Override
 	public Authentication extractAuthentication(Map<String, ?> map) {
 		UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) super.extractAuthentication(
 				map);
 		if (map.containsKey(KEY_ID_USER)) {
-			SystemUserDTO systemUserDTO = extractUser(map, auth);
-			return new UsernamePasswordAuthenticationToken(systemUserDTO, "N/A", auth.getAuthorities());
+			User user = extractUser(map, auth);
+			return new UsernamePasswordAuthenticationToken(user, "N/A", auth.getAuthorities());
 		}
 		return auth;
 	}
@@ -39,11 +38,11 @@ public class UserAuthenticationConverterDecorator extends DefaultUserAuthenticat
 	 * @param auth
 	 * @return
 	 */
-	private SystemUserDTO extractUser(Map<String, ?> map, UsernamePasswordAuthenticationToken auth) {
+	private User extractUser(Map<String, ?> map, UsernamePasswordAuthenticationToken auth) {
 		User user = new User();
-		user.setCode((Long) map.get(KEY_ID_USER));
-		SystemUserDTO systemUserDTO = new SystemUserDTO(user, auth.getAuthorities());
-		return systemUserDTO;
+		user.setCode(((Number) map.get(KEY_ID_USER)).longValue());
+		user.setEmail(String.valueOf(auth.getPrincipal()));
+		return user;
 	}
 
 }

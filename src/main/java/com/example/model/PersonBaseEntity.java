@@ -2,13 +2,11 @@ package com.example.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -33,11 +31,6 @@ public class PersonBaseEntity implements Serializable {
 	 */
 	private static final long serialVersionUID = 1307503170517288448L;
 
-	@Id
-	@Column(name = "PK_PERSON")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long code;
-
 	@NotEmpty
 	@Size(max = 50, min = 4)
 	@Column(name = "TX_NAME", length = 50, nullable = false)
@@ -56,19 +49,11 @@ public class PersonBaseEntity implements Serializable {
 
 	@Column(name = "DT_LAST_CHANGE")
 	@LastModifiedDate
-	private LocalDate dtLastChange;
+	private LocalDateTime dtLastChange;
 
 	@Column(name = "ID_USER")
 	@LastModifiedBy
 	private Long userChange;
-
-	public Long getCode() {
-		return code;
-	}
-
-	public void setCode(Long code) {
-		this.code = code;
-	}
 
 	public String getName() {
 		return name;
@@ -102,11 +87,11 @@ public class PersonBaseEntity implements Serializable {
 		this.active = active;
 	}
 
-	public LocalDate getDtLastChange() {
+	public LocalDateTime getDtLastChange() {
 		return dtLastChange;
 	}
 
-	public void setDtLastChange(LocalDate dtLastChange) {
+	public void setDtLastChange(LocalDateTime dtLastChange) {
 		this.dtLastChange = dtLastChange;
 	}
 
@@ -116,37 +101,6 @@ public class PersonBaseEntity implements Serializable {
 
 	public void setUserChange(Long userChange) {
 		this.userChange = userChange;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((code == null) ? 0 : code.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PersonBaseEntity other = (PersonBaseEntity) obj;
-		if (code == null) {
-			if (other.code != null)
-				return false;
-		} else if (!code.equals(other.code))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Person [code=" + code + ", name=" + name + ", dtBirth=" + dtBirth + ", genre=" + genre + ", active="
-				+ active + ", dtLastChange=" + dtLastChange + ", userChange=" + userChange + "]";
 	}
 
 }

@@ -8,19 +8,19 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.example.model.PersonBaseEntity;
+import com.example.model.AddressBaseEntity;
 
 /**
- * Entity to mapping TB_PEOPLE<br>
+ * Entity to hist mapping TBH_ADDRESS<br>
  * Extract the auth to abstract entity
  *
  * @author <a href="mailto:mauricionrgarcia@gmail.com">Mauricio</a>
  * @version
- * @sinse 19/02/2018 22:05:29
+ * @sinse 25/02/2018 19:13:35
  */
 @Entity
-@Table(name = "TBH_PEOPLE")
-public class PersonHistory extends PersonBaseEntity {
+@Table(name = "TBH_ADDRESS")
+public class AddressHistory extends AddressBaseEntity {
 
 	/**
 	 * serialVersionUID
@@ -30,16 +30,16 @@ public class PersonHistory extends PersonBaseEntity {
 	/**
 	 * @param code identifier
 	 */
-	public PersonHistory(Long code) {
+	public AddressHistory(Long code) {
 		super();
-		this.historyId = new PersonHistoryId();
+		this.historyId = new AddressHistoryId();
 		this.historyId.setCode(code);
 	}
 
 	/**
 	 * Contructor no args
 	 */
-	public PersonHistory() {
+	public AddressHistory() {
 		super();
 	}
 
@@ -47,19 +47,19 @@ public class PersonHistory extends PersonBaseEntity {
 	 * Id tb history
 	 */
 	@EmbeddedId
-	private PersonHistoryId historyId;
+	private AddressHistoryId historyId;
 
 	/**
 	 * @return the historyId
 	 */
-	public PersonHistoryId getHistoryId() {
+	public AddressHistoryId getHistoryId() {
 		return historyId;
 	}
 
 	/**
 	 * @param historyId the historyId to set
 	 */
-	public void setHistoryId(PersonHistoryId historyId) {
+	public void setHistoryId(AddressHistoryId historyId) {
 		this.historyId = historyId;
 	}
 
@@ -73,7 +73,7 @@ public class PersonHistory extends PersonBaseEntity {
  * @sinse 25/02/2018 18:23:21
  */
 @Embeddable
-class PersonHistoryId implements Serializable {
+class AddressHistoryId implements Serializable {
 
 	/**
 	 * serialVersionUID
@@ -89,7 +89,7 @@ class PersonHistoryId implements Serializable {
 	/**
 	 * identifier of person
 	 */
-	@Column(name = "PK_PERSON")
+	@Column(name = "PK_ADDRESS")
 	private Long code;
 
 	/**

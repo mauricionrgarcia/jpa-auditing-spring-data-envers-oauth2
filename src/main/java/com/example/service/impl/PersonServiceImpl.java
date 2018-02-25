@@ -52,8 +52,7 @@ public class PersonServiceImpl implements PersonService {
 		// e.getEntity()) .collect(Collectors.toList());
 
 		Sort sort = new Sort(Direction.DESC, "dtLastChange");
-		PersonHistory filter = new PersonHistory();
-		filter.setCode(code);
+		PersonHistory filter = new PersonHistory(code);
 		Example<PersonHistory> example = Example.of(filter);
 
 		List<PersonHistory> history = personHistoryRepository.findAll(example, sort);
@@ -66,6 +65,10 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public Person savePerson(Person person) {
+
+		person.getAddress().forEach(address -> {
+			address.setPerson(person);
+		});
 		Person personEntity = personRepository.save(person);
 		return personEntity;
 	}
