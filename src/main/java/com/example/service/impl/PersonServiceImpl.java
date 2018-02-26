@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.model.Person;
 import com.example.model.hist.PersonHistory;
+import com.example.repository.PersonEntityHistoryRepository;
 import com.example.repository.PersonHistoryRepository;
 import com.example.repository.PersonRepository;
 import com.example.service.PersonService;
@@ -37,6 +38,9 @@ public class PersonServiceImpl implements PersonService {
 	@Autowired
 	private transient PersonHistoryRepository personHistoryRepository;
 
+	@Autowired
+	private transient PersonEntityHistoryRepository personEntityHistoryRepository;
+
 	public Person find(Long code) {
 		Optional<Person> optional = personRepository.findByCode(code);
 		return optional.orElseThrow(() -> new EmptyResultDataAccessException(1));
@@ -44,13 +48,17 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public List<Person> findAllRevision(Long code) {
-		// performance problem identified in standard implementation
+		return personEntityHistoryRepository.findByIdAndRevision(code, code);
+	}
 
-		// Revisions<Integer, Person> revisions =
-		// personRevisionRepository.findRevisions(code);
-		// List<Person> people = revisions.reverse().getContent().stream().map(e ->
-		// e.getEntity()) .collect(Collectors.toList());
-
+	/**
+	 * manual implementation
+	 * 
+	 * @param code
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private List<Person> findAllRevisionSpringData(Long code) {
 		Sort sort = new Sort(Direction.DESC, "dtLastChange");
 		PersonHistory filter = new PersonHistory(code);
 		Example<PersonHistory> example = Example.of(filter);
@@ -61,6 +69,7 @@ public class PersonServiceImpl implements PersonService {
 			BeanUtils.copyProperties(hist, person);
 			return person;
 		}).collect(Collectors.toList());
+
 	}
 
 	@Override
