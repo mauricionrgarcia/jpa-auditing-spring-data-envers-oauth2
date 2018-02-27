@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.model.Person;
 import com.example.model.hist.PersonHistory;
-import com.example.repository.PersonEntityHistoryRepository;
+import com.example.repository.HistoryFinal;
 import com.example.repository.PersonHistoryRepository;
 import com.example.repository.PersonRepository;
 import com.example.service.PersonService;
@@ -38,8 +38,12 @@ public class PersonServiceImpl implements PersonService {
 	@Autowired
 	private transient PersonHistoryRepository personHistoryRepository;
 
+	// @Autowired
+	// private transient PersonEntityHistoryRepository
+	// personEntityHistoryRepository;
+
 	@Autowired
-	private transient PersonEntityHistoryRepository personEntityHistoryRepository;
+	private transient HistoryFinal historyFinal;
 
 	public Person find(Long code) {
 		Optional<Person> optional = personRepository.findByCode(code);
@@ -48,7 +52,12 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public List<Person> findAllRevision(Long code) {
-		return personEntityHistoryRepository.findByIdAndRevision(code, code);
+		// personEntityHistoryRepository.findByIdAndRevision(code, code);
+
+		List<Person> a = historyFinal.findById(code, 1L);
+
+		System.out.println(a);
+		return null;
 	}
 
 	/**

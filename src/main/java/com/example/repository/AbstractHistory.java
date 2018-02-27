@@ -6,14 +6,15 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import com.example.repository.envers.CustomAuditReaderFactory;
-import com.example.repository.envers.CustomAuditReaderImpl;
+import com.example.repository.query.HistoryQueryFactor;
 
 public abstract class AbstractHistory<T, ID extends Serializable> {
 
 	private final EntityManager entityManager;
 
 	private Class<T> persistentClass;
+
+	private HistoryQueryFactor factor;
 
 	/**
 	 * @param em
@@ -31,17 +32,21 @@ public abstract class AbstractHistory<T, ID extends Serializable> {
 	 * @param revision
 	 * @return
 	 */
-	public List<T> findByIdAndRevision(ID id, Number revision) {
-		CustomAuditReaderImpl reader = getAuditReader();
-		return reader.findEntity(persistentClass, id);
+	@SuppressWarnings("unchecked")
+	public List<T> findById(ID id) {
+		factor = HistoryQueryFactor.get(persistentClass.getName(), entityManager);
+		return (List<T>) factor.getResult(id);
 	}
 
 	/**
+	 * @param id
+	 * @param revision
 	 * @return
 	 */
-	private CustomAuditReaderImpl getAuditReader() {
-		CustomAuditReaderImpl reader = CustomAuditReaderFactory.get(entityManager);
-		return reader;
+	@SuppressWarnings("unchecked")
+	public List<T> findById(ID id, Long user) {
+		factor = HistoryQueryFactor.get(persistentClass.getName(), entityManager);
+		return (List<T>) factor.getResult(id, user);
 	}
 
 }
