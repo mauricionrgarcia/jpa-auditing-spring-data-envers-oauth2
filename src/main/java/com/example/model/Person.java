@@ -9,6 +9,8 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -17,9 +19,11 @@ import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
@@ -32,7 +36,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
  */
 @Entity
 @Table(name = "TB_PEOPLE")
-@Audited
+@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 @AuditTable("TBH_PEOPLE")
 @EntityListeners(AuditingEntityListener.class)
 @AuditOverride(forClass = PersonBaseEntity.class)
@@ -53,6 +57,28 @@ public class Person extends PersonBaseEntity {
 	@AuditMappedBy(mappedBy = "person")
 	@NotAudited
 	private List<Address> address;
+
+	@JsonIdentityReference(alwaysAsId = false)
+	@OneToMany(mappedBy = "person", cascade = { CascadeType.ALL })
+	private List<Contact> contact;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_USER")
+	private User userSistema;
+
+	/**
+	 * @return the contact
+	 */
+	public List<Contact> getContact() {
+		return contact;
+	}
+
+	/**
+	 * @param contact the contact to set
+	 */
+	public void setContact(List<Contact> contact) {
+		this.contact = contact;
+	}
 
 	/**
 	 * @param code
@@ -95,6 +121,20 @@ public class Person extends PersonBaseEntity {
 	 */
 	public void setCode(Long code) {
 		this.code = code;
+	}
+
+	/**
+	 * @return the userSistema
+	 */
+	public User getUserSistema() {
+		return userSistema;
+	}
+
+	/**
+	 * @param userSistema the userSistema to set
+	 */
+	public void setUserSistema(User userSistema) {
+		this.userSistema = userSistema;
 	}
 
 }

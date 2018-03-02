@@ -1,6 +1,8 @@
 package com.example.repository.query;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
 
@@ -39,6 +41,31 @@ public class HistoryQueryFactor {
 	public List<?> getResult(Object code, Long user) {
 		queryBuilder.withEntityId(code);
 		queryBuilder.withProperties("userChange", user);
+		return queryBuilder.buildAndExecuteQuery(session);
+	}
+
+	/**
+	 * @param id
+	 * @param user
+	 * @return
+	 */
+	public List<?> getResult(Object code, Map<String, Object> paramsMap) {
+		queryBuilder.withEntityId(code);
+		for (Entry<String, Object> param : paramsMap.entrySet()) {
+			queryBuilder.withProperties(param.getKey(), param.getValue());
+		}
+		return queryBuilder.buildAndExecuteQuery(session);
+	}
+
+	/**
+	 * @param id
+	 * @param user
+	 * @return
+	 */
+	public List<?> getResult(Map<String, Object> paramsMap) {
+		for (Entry<String, Object> param : paramsMap.entrySet()) {
+			queryBuilder.withProperties(param.getKey(), param.getValue());
+		}
 		return queryBuilder.buildAndExecuteQuery(session);
 	}
 

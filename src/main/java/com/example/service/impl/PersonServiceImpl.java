@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.example.model.Contact;
 import com.example.model.Person;
 import com.example.model.hist.PersonHistory;
 import com.example.repository.HistoryFinal;
@@ -52,12 +53,22 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public List<Person> findAllRevision(Long code) {
-		// personEntityHistoryRepository.findByIdAndRevision(code, code);
 
-		List<Person> a = historyFinal.findById(code, 1L);
+		List<Person> a = historyFinal.findById(code);
 
 		System.out.println(a);
-		return null;
+
+		for (Person c : a) {
+			for (Contact con : c.getContact()) {
+				con.getFones().forEach(e -> {
+					System.out.println(e.getNumber());
+				});
+				con.getEmails().forEach(e -> {
+					System.out.println(e.getEmail());
+				});
+			}
+		}
+		return a;
 	}
 
 	/**
@@ -87,6 +98,20 @@ public class PersonServiceImpl implements PersonService {
 		person.getAddress().forEach(address -> {
 			address.setPerson(person);
 		});
+		person.getContact().forEach(c -> {
+			c.setPerson(person);
+		});
+
+		person.getContact().forEach(c -> {
+			c.getEmails().forEach(e -> {
+				e.setContact(c);
+			});
+			c.getFones().forEach(e -> {
+				e.setContact(c);
+			});
+			c.setPerson(person);
+		});
+
 		Person personEntity = personRepository.save(person);
 		return personEntity;
 	}
@@ -100,7 +125,8 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public Person udpatePerson(Person person) {
 		Person personDefault = find(person.getCode());
-		BeanUtils.copyProperties(person, personDefault, "code");
-		return this.personRepository.save(personDefault);
+		BeanUtils.copyProperties(person, personDefault, "code", "contact");
+		Person a = this.personRepository.save(person);
+		return a;
 	}
 }
